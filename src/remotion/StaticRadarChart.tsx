@@ -21,6 +21,7 @@ interface StaticRadarChartProps {
 	maxValue: number;
 	graphColor: string;
 	overallRating: number;
+	headerBackgroundColor?: 'black' | 'white';
 }
 
 const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
@@ -29,6 +30,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 	maxValue,
 	graphColor,
 	overallRating,
+	headerBackgroundColor = 'white',
 }) => {
 	// Use displayData for numbers if provided, otherwise fall back to data
 	const numbersData = displayData || data;
@@ -120,10 +122,10 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 				backgroundColor: '#0d0d0d',
 			}}
 		>
-			{/* White Header */}
+			{/* Header */}
 			<div
 				style={{
-					backgroundColor: 'white',
+					backgroundColor: headerBackgroundColor,
 					width: '100%',
 					height: '145px',
 					display: 'flex',

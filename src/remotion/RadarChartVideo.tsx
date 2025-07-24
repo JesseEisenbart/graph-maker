@@ -19,6 +19,7 @@ interface RadarChartVideoProps {
 	animationDuration: number;
 	initialDelay: number;
 	totalDuration: number;
+	headerBackgroundColor?: 'black' | 'white';
 }
 
 export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
@@ -29,6 +30,7 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 	animationDuration,
 	initialDelay,
 	totalDuration,
+	headerBackgroundColor = 'white',
 }) => {
 	const frame = useCurrentFrame();
 	const { fps, width, height } = useVideoConfig();
@@ -176,6 +178,7 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 						maxValue={100}
 						graphColor={graphColor}
 						overallRating={currentRating}
+						headerBackgroundColor={headerBackgroundColor}
 					/>
 				</div>
 			</div>

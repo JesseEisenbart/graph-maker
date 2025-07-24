@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
 			totalDuration,
 			currentData,
 			overallRating,
+			headerBackgroundColor,
 		} = body;
 
 		// Validate input
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
 				animationDuration,
 				initialDelay,
 				totalDuration,
+				headerBackgroundColor,
 			},
 		});
 
@@ -95,6 +97,7 @@ export async function POST(request: NextRequest) {
 				animationDuration,
 				initialDelay,
 				totalDuration,
+				headerBackgroundColor,
 			},
 		});
 

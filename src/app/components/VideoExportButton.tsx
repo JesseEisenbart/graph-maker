@@ -20,6 +20,7 @@ interface VideoExportButtonProps {
 	totalDuration: number;
 	currentData: GraphData;
 	overallRating: number;
+	headerBackgroundColor: 'black' | 'white';
 }
 
 const VideoExportButton: React.FC<VideoExportButtonProps> = ({
@@ -31,6 +32,7 @@ const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 	totalDuration,
 	currentData,
 	overallRating,
+	headerBackgroundColor,
 }) => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -54,6 +56,7 @@ const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 					totalDuration,
 					currentData,
 					overallRating,
+					headerBackgroundColor,
 				}),
 			});
 

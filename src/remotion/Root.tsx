@@ -11,7 +11,7 @@ export const RemotionRoot: React.FC = () => {
 		<>
 			<Composition
 				id='RadarChartAnimation'
-				component={RadarChartVideo}
+				component={RadarChartVideo as any}
 				durationInFrames={300} // Default 10 seconds at 30fps, will be overridden by calculateMetadata
 				fps={30}
 				width={CURRENT_ASPECT_RATIO.width}
@@ -19,7 +19,7 @@ export const RemotionRoot: React.FC = () => {
 				calculateMetadata={({ props }) => {
 					// Dynamic duration based on totalDuration prop
 					const fps = 30;
-					const totalDuration = props.totalDuration || 10;
+					const totalDuration = (props as any).totalDuration || 10;
 					return {
 						durationInFrames: Math.ceil(totalDuration * fps),
 					};
@@ -46,6 +46,7 @@ export const RemotionRoot: React.FC = () => {
 					animationDuration: 8,
 					initialDelay: 1,
 					totalDuration: 10,
+					headerBackgroundColor: 'white',
 				}}
 			/>
 		</>

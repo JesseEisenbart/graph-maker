@@ -43,6 +43,9 @@ const GraphBuilder: React.FC = () => {
 	const [graphColor, setGraphColor] = useState<string>(
 		ATTRIBUTE_COLORS.strength
 	);
+	const [headerBackgroundColor, setHeaderBackgroundColor] = useState<
+		'black' | 'white'
+	>('white');
 
 	const maxValue = 100;
 
@@ -419,6 +422,35 @@ const GraphBuilder: React.FC = () => {
 						</div>
 					</div>
 
+					{/* Header Background Color */}
+					<div className='mt-8 space-y-3'>
+						<label className='text-sm font-semibold text-white font-sans'>
+							Header Background Color
+						</label>
+						<div className='flex rounded-lg bg-black/40 p-1'>
+							<button
+								onClick={() => setHeaderBackgroundColor('white')}
+								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
+									headerBackgroundColor === 'white'
+										? 'bg-white text-black shadow-lg'
+										: 'text-gray-400 hover:text-white'
+								}`}
+							>
+								White
+							</button>
+							<button
+								onClick={() => setHeaderBackgroundColor('black')}
+								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
+									headerBackgroundColor === 'black'
+										? 'bg-black text-white shadow-lg border border-white/20'
+										: 'text-gray-400 hover:text-white'
+								}`}
+							>
+								Black
+							</button>
+						</div>
+					</div>
+
 					{/* Video Export Section */}
 					<div className='mt-8 space-y-5'>
 						<label className='text-sm font-semibold text-white font-sans mb-4'>
@@ -433,6 +465,7 @@ const GraphBuilder: React.FC = () => {
 							totalDuration={totalDuration}
 							currentData={currentData}
 							overallRating={overallRating}
+							headerBackgroundColor={headerBackgroundColor}
 						/>
 					</div>
 				</div>
