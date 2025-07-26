@@ -9,7 +9,7 @@
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-instrument-sans);
-	--font-serif: var(--font-instrument-serif);
+	--font-serif: var(--font-instrument-sans);
 }
 
 @media (prefers-color-scheme: dark) {

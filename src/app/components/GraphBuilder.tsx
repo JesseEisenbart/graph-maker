@@ -582,7 +582,7 @@ const GraphBuilder: React.FC = () => {
 						{attributes.map((attr) => (
 							<div key={attr.key} className='text-start'>
 								<div
-									className='text-2xl -tracking-normal font-serif'
+									className='text-2xl -tracking-normal font-sans'
 									style={{
 										color: attr.color,
 										textShadow: `0 0 10px ${attr.color}`,
@@ -590,7 +590,7 @@ const GraphBuilder: React.FC = () => {
 								>
 									{attr.label}
 								</div>
-								<div className='text-5xl text-white font-serif'>
+								<div className='text-5xl text-white font-sans'>
 									{currentData[attr.key as keyof GraphData]}
 								</div>
 							</div>

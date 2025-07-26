@@ -1,18 +1,12 @@
 'use client';
 
-import { Instrument_Sans, Instrument_Serif } from 'next/font/google';
+import { Instrument_Sans } from 'next/font/google';
 import { ATTRIBUTE_COLORS } from '../constants/colors';
 
 const instrumentSans = Instrument_Sans({
 	subsets: ['latin'],
 	weight: ['400', '500', '600', '700'],
 	variable: '--font-instrument-sans',
-});
-
-const instrumentSerif = Instrument_Serif({
-	subsets: ['latin'],
-	weight: '400',
-	variable: '--font-instrument-serif',
 });
 
 import { useEffect, useState } from 'react';
@@ -280,7 +274,7 @@ const RadarChart: React.FC<RadarChartProps> = ({
 						textAnchor='middle'
 						fill='white'
 						fontSize='54'
-						fontFamily={instrumentSerif.style.fontFamily}
+						fontFamily={instrumentSans.style.fontFamily}
 					>
 						{overallRating}
 					</text>
@@ -301,7 +295,7 @@ const RadarChart: React.FC<RadarChartProps> = ({
 							color: attr.color,
 							textShadow: `0 0 12px ${attr.color}`,
 							fontSize: '22px',
-							fontFamily: instrumentSerif.style.fontFamily,
+							fontFamily: instrumentSans.style.fontFamily,
 						}}
 					>
 						<div className='mb-1'>{attr.label}</div>

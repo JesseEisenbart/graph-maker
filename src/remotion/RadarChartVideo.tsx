@@ -147,11 +147,11 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 			{/* Force immediate font loading for video rendering */}
 			<link
 				rel='preload'
-				href='https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400&display=block'
+				href='https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=block'
 				as='style'
 			/>
 			<link
-				href='https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:wght@400&display=block'
+				href='https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=block'
 				rel='stylesheet'
 			/>
 			<style>

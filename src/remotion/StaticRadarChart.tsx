@@ -222,7 +222,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 							textAnchor='middle'
 							fill='white'
 							fontSize='52'
-							fontFamily='Instrument Serif, Georgia, "Times New Roman", serif'
+							fontFamily='Instrument Sans, sans-serif'
 						>
 							{overallRating}
 						</text>
@@ -244,8 +244,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 								color: attr.color,
 								textShadow: `0 0 12px ${attr.color}`,
 								fontSize: '18px',
-								fontFamily:
-									'Instrument Serif, Georgia, "Times New Roman", serif',
+								fontFamily: 'Instrument Sans, sans-serif',
 							}}
 						>
 							{attr.label}
@@ -271,8 +270,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 							style={{
 								fontSize: '20px',
 								letterSpacing: '-0.025em',
-								fontFamily:
-									'Instrument Serif, Georgia, "Times New Roman", serif',
+								fontFamily: 'Instrument Sans, sans-serif',
 								color: attr.color,
 								marginBottom: '-4px',
 							}}
@@ -283,8 +281,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 							style={{
 								fontSize: '36px',
 								color: 'white',
-								fontFamily:
-									'Instrument Serif, Georgia, "Times New Roman", serif',
+								fontFamily: 'Instrument Sans, sans-serif',
 							}}
 						>
 							{attr.value}

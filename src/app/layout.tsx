@@ -1,18 +1,11 @@
 import type { Metadata } from 'next';
-import { Instrument_Sans, Instrument_Serif } from 'next/font/google';
+import { Instrument_Sans } from 'next/font/google';
 import './globals.css';
 
 const instrumentSans = Instrument_Sans({
 	variable: '--font-instrument-sans',
 	subsets: ['latin'],
 	weight: ['400', '500', '600', '700'],
-});
-
-const instrumentSerif = Instrument_Serif({
-	variable: '--font-instrument-serif',
-	subsets: ['latin'],
-	weight: ['400'],
-	style: ['normal', 'italic'],
 });
 
 export const metadata: Metadata = {
@@ -28,9 +21,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body
-				className={`${instrumentSans.variable} ${instrumentSerif.variable} antialiased`}
-			>
+			<body className={`${instrumentSans.variable} antialiased`}>
 				{children}
 			</body>
 		</html>

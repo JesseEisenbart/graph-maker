@@ -249,7 +249,7 @@ const VideoRadarChart: React.FC<RadarChartProps> = ({
 					textAnchor='middle'
 					fill='white'
 					fontSize='54'
-					fontFamily='Instrument Serif, serif'
+					fontFamily='Instrument Sans, sans-serif'
 				>
 					{overallRating}
 				</text>
@@ -271,7 +271,7 @@ const VideoRadarChart: React.FC<RadarChartProps> = ({
 							color: attr.color,
 							textShadow: `0 0 12px ${attr.color}`,
 							fontSize: '18px',
-							fontFamily: 'Instrument Serif, serif',
+							fontFamily: 'Instrument Sans, sans-serif',
 						}}
 					>
 						<div style={{ marginBottom: '4px' }}>{attr.label}</div>
