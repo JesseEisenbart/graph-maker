@@ -14,23 +14,27 @@ interface GraphData {
 interface RadarChartVideoProps {
 	beforeData: GraphData;
 	afterData: GraphData;
-	graphColor: string;
+	beforeGraphColor: string;
+	afterGraphColor: string;
 	overallRating: number;
 	animationDuration: number;
 	initialDelay: number;
 	totalDuration: number;
 	headerBackgroundColor?: 'black' | 'white';
+	showCenterNumber?: boolean;
 }
 
 export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 	beforeData,
 	afterData,
-	graphColor,
+	beforeGraphColor,
+	afterGraphColor,
 	overallRating,
 	animationDuration,
 	initialDelay,
 	totalDuration,
 	headerBackgroundColor = 'white',
+	showCenterNumber = true,
 }) => {
 	const frame = useCurrentFrame();
 	const { fps, width, height } = useVideoConfig();
@@ -50,6 +54,10 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 			extrapolateRight: 'clamp',
 		}
 	);
+
+	// Determine which color to use based on frame
+	const currentGraphColor =
+		frame < animationStartFrame ? beforeGraphColor : afterGraphColor;
 
 	// Smooth interpolation between before and after data
 	const currentData: GraphData = {
@@ -176,9 +184,10 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 						data={currentData}
 						displayData={displayData}
 						maxValue={100}
-						graphColor={graphColor}
+						graphColor={currentGraphColor}
 						overallRating={currentRating}
 						headerBackgroundColor={headerBackgroundColor}
+						showCenterNumber={showCenterNumber}
 					/>
 				</div>
 			</div>

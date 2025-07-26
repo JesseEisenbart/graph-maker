@@ -31,6 +31,7 @@ interface RadarChartProps {
 	overallRating: number;
 	animationDuration?: number;
 	disableInternalAnimation?: boolean;
+	showCenterNumber?: boolean;
 }
 
 const RadarChart: React.FC<RadarChartProps> = ({
@@ -40,6 +41,7 @@ const RadarChart: React.FC<RadarChartProps> = ({
 	overallRating,
 	animationDuration = 2,
 	disableInternalAnimation = false,
+	showCenterNumber = true,
 }) => {
 	const [animatedValues, setAnimatedValues] = useState({
 		strength: 0,
@@ -271,16 +273,18 @@ const RadarChart: React.FC<RadarChartProps> = ({
 				/>
 
 				{/* Overall Rating in Center */}
-				<text
-					x={center}
-					y={center + 18}
-					textAnchor='middle'
-					fill='white'
-					fontSize='54'
-					fontFamily={instrumentSerif.style.fontFamily}
-				>
-					{overallRating}
-				</text>
+				{showCenterNumber && (
+					<text
+						x={center}
+						y={center + 18}
+						textAnchor='middle'
+						fill='white'
+						fontSize='54'
+						fontFamily={instrumentSerif.style.fontFamily}
+					>
+						{overallRating}
+					</text>
+				)}
 			</svg>
 
 			{/* Labels */}

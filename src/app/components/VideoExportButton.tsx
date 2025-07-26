@@ -14,25 +14,29 @@ interface GraphData {
 interface VideoExportButtonProps {
 	beforeData: GraphData;
 	afterData: GraphData;
-	graphColor: string;
+	beforeGraphColor: string;
+	afterGraphColor: string;
 	animationDuration: number;
 	initialDelay: number;
 	totalDuration: number;
 	currentData: GraphData;
 	overallRating: number;
 	headerBackgroundColor: 'black' | 'white';
+	showCenterNumber: boolean;
 }
 
 const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 	beforeData,
 	afterData,
-	graphColor,
+	beforeGraphColor,
+	afterGraphColor,
 	animationDuration,
 	initialDelay,
 	totalDuration,
 	currentData,
 	overallRating,
 	headerBackgroundColor,
+	showCenterNumber,
 }) => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -50,13 +54,15 @@ const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 				body: JSON.stringify({
 					beforeData,
 					afterData,
-					graphColor,
+					beforeGraphColor,
+					afterGraphColor,
 					animationDuration,
 					initialDelay,
 					totalDuration,
 					currentData,
 					overallRating,
 					headerBackgroundColor,
+					showCenterNumber,
 				}),
 			});
 

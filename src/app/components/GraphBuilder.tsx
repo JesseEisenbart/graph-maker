@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RadarChart from './RadarChart';
 import VideoExportButton from './VideoExportButton';
 import { ATTRIBUTE_COLORS, PRESET_GRAPH_COLORS } from '../constants/colors';
@@ -40,12 +40,18 @@ const GraphBuilder: React.FC = () => {
 	const [totalDuration, setTotalDuration] = useState(10); // total video duration in seconds
 	const [activeTab, setActiveTab] = useState<'before' | 'after'>('before');
 
-	const [graphColor, setGraphColor] = useState<string>(
+	const [beforeGraphColor, setBeforeGraphColor] = useState<string>(
 		ATTRIBUTE_COLORS.strength
+	);
+	const [afterGraphColor, setAfterGraphColor] = useState<string>(
+		ATTRIBUTE_COLORS.ambition
 	);
 	const [headerBackgroundColor, setHeaderBackgroundColor] = useState<
 		'black' | 'white'
 	>('white');
+	const [currentGraphColor, setCurrentGraphColor] =
+		useState<string>(beforeGraphColor);
+	const [showCenterNumber, setShowCenterNumber] = useState<boolean>(true);
 
 	const maxValue = 100;
 
@@ -118,28 +124,38 @@ const GraphBuilder: React.FC = () => {
 		setActiveTab('before');
 	};
 
+	// Update color when activeTab or color pickers change and not animating
+	useEffect(() => {
+		if (!isAnimating) {
+			setCurrentGraphColor(
+				activeTab === 'before' ? beforeGraphColor : afterGraphColor
+			);
+		}
+	}, [activeTab, beforeGraphColor, afterGraphColor, isAnimating]);
+
 	const playAnimation = () => {
 		if (isAnimating) return;
 
 		setIsAnimating(true);
 		setCurrentData(beforeData);
+		setCurrentGraphColor(beforeGraphColor);
 
-		// Animate the numbers gradually
-		const duration = animationDuration * 1000; // Convert to milliseconds
-		const steps = 60; // 60 FPS
+		const duration = animationDuration * 1000; // ms
+		const steps = 60;
 		const stepDuration = duration / steps;
 		let currentStep = 0;
 		const startValues = { ...beforeData };
 		const targetValues = { ...afterData };
 
+		// Switch color after initialDelay
+		const colorTimeout = setTimeout(() => {
+			setCurrentGraphColor(afterGraphColor);
+		}, initialDelay * 1000);
+
 		const animationTimer = setInterval(() => {
 			currentStep++;
 			const progress = Math.min(currentStep / steps, 1);
-
-			// Easing function for smooth animation
 			const easeOut = 1 - Math.pow(1 - progress, 3);
-
-			// Interpolate between start and target values
 			const interpolatedData: GraphData = {
 				strength: Math.round(
 					startValues.strength +
@@ -168,13 +184,13 @@ const GraphBuilder: React.FC = () => {
 						(targetValues.ambition - startValues.ambition) * easeOut
 				),
 			};
-
 			setCurrentData(interpolatedData);
-
 			if (progress >= 1) {
 				clearInterval(animationTimer);
+				clearTimeout(colorTimeout);
 				setIsAnimating(false);
-				setCurrentData(afterData); // Ensure we end exactly on target values
+				setCurrentData(afterData);
+				setCurrentGraphColor(afterGraphColor);
 			}
 		}, stepDuration);
 	};
@@ -379,17 +395,18 @@ const GraphBuilder: React.FC = () => {
 					<div className='mt-8 space-y-3'>
 						<div className='space-y-3'>
 							<label className='text-sm font-semibold text-white font-sans'>
-								Graph Color
+								Graph Color (Before)
 							</label>
-
 							{/* Color Presets */}
 							<div className='grid grid-cols-4 gap-2'>
 								{PRESET_GRAPH_COLORS.map((color) => (
 									<button
-										key={color}
-										onClick={() => setGraphColor(color)}
+										key={color + '-before'}
+										onClick={() =>
+											setBeforeGraphColor(color)
+										}
 										className={`w-full h-8 rounded border-2 transition-all ${
-											graphColor === color
+											beforeGraphColor === color
 												? 'border-white scale-110'
 												: 'border-white/30 hover:border-white/60'
 										}`}
@@ -398,25 +415,68 @@ const GraphBuilder: React.FC = () => {
 									/>
 								))}
 							</div>
-
 							{/* Custom Color Picker */}
 							<div className='flex items-center space-x-3'>
 								<input
 									type='color'
-									value={graphColor}
+									value={beforeGraphColor}
 									onChange={(e) =>
-										setGraphColor(e.target.value)
+										setBeforeGraphColor(e.target.value)
 									}
 									className='w-12 h-8 rounded border-2 border-white/20 cursor-pointer bg-transparent'
 								/>
 								<div
 									className='flex-1 h-8 rounded border border-white/20 flex items-center justify-center text-white text-sm font-mono'
 									style={{
-										backgroundColor: graphColor + '20',
-										borderColor: graphColor,
+										backgroundColor:
+											beforeGraphColor + '20',
+										borderColor: beforeGraphColor,
 									}}
 								>
-									{graphColor.toUpperCase()}
+									{beforeGraphColor.toUpperCase()}
+								</div>
+							</div>
+						</div>
+						<div className='space-y-3 mt-4'>
+							<label className='text-sm font-semibold text-white font-sans'>
+								Graph Color (After)
+							</label>
+							{/* Color Presets */}
+							<div className='grid grid-cols-4 gap-2'>
+								{PRESET_GRAPH_COLORS.map((color) => (
+									<button
+										key={color + '-after'}
+										onClick={() =>
+											setAfterGraphColor(color)
+										}
+										className={`w-full h-8 rounded border-2 transition-all ${
+											afterGraphColor === color
+												? 'border-white scale-110'
+												: 'border-white/30 hover:border-white/60'
+										}`}
+										style={{ backgroundColor: color }}
+										title={color.toUpperCase()}
+									/>
+								))}
+							</div>
+							{/* Custom Color Picker */}
+							<div className='flex items-center space-x-3'>
+								<input
+									type='color'
+									value={afterGraphColor}
+									onChange={(e) =>
+										setAfterGraphColor(e.target.value)
+									}
+									className='w-12 h-8 rounded border-2 border-white/20 cursor-pointer bg-transparent'
+								/>
+								<div
+									className='flex-1 h-8 rounded border border-white/20 flex items-center justify-center text-white text-sm font-mono'
+									style={{
+										backgroundColor: afterGraphColor + '20',
+										borderColor: afterGraphColor,
+									}}
+								>
+									{afterGraphColor.toUpperCase()}
 								</div>
 							</div>
 						</div>
@@ -429,7 +489,9 @@ const GraphBuilder: React.FC = () => {
 						</label>
 						<div className='flex rounded-lg bg-black/40 p-1'>
 							<button
-								onClick={() => setHeaderBackgroundColor('white')}
+								onClick={() =>
+									setHeaderBackgroundColor('white')
+								}
 								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
 									headerBackgroundColor === 'white'
 										? 'bg-white text-black shadow-lg'
@@ -439,7 +501,9 @@ const GraphBuilder: React.FC = () => {
 								White
 							</button>
 							<button
-								onClick={() => setHeaderBackgroundColor('black')}
+								onClick={() =>
+									setHeaderBackgroundColor('black')
+								}
 								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
 									headerBackgroundColor === 'black'
 										? 'bg-black text-white shadow-lg border border-white/20'
@@ -447,6 +511,35 @@ const GraphBuilder: React.FC = () => {
 								}`}
 							>
 								Black
+							</button>
+						</div>
+					</div>
+
+					{/* Show Center Number Toggle */}
+					<div className='mt-8 space-y-3'>
+						<label className='text-sm font-semibold text-white font-sans'>
+							Center Number Display
+						</label>
+						<div className='flex rounded-lg bg-black/40 p-1'>
+							<button
+								onClick={() => setShowCenterNumber(true)}
+								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
+									showCenterNumber
+										? 'bg-green-600 text-white shadow-lg'
+										: 'text-gray-400 hover:text-white'
+								}`}
+							>
+								Show
+							</button>
+							<button
+								onClick={() => setShowCenterNumber(false)}
+								className={`flex-1 py-2 px-4 rounded-md font-semibold transition-all ${
+									!showCenterNumber
+										? 'bg-red-600 text-white shadow-lg'
+										: 'text-gray-400 hover:text-white'
+								}`}
+							>
+								Hide
 							</button>
 						</div>
 					</div>
@@ -459,13 +552,15 @@ const GraphBuilder: React.FC = () => {
 						<VideoExportButton
 							beforeData={beforeData}
 							afterData={afterData}
-							graphColor={graphColor}
+							beforeGraphColor={beforeGraphColor}
+							afterGraphColor={afterGraphColor}
 							animationDuration={animationDuration}
 							initialDelay={initialDelay}
 							totalDuration={totalDuration}
 							currentData={currentData}
 							overallRating={overallRating}
 							headerBackgroundColor={headerBackgroundColor}
+							showCenterNumber={showCenterNumber}
 						/>
 					</div>
 				</div>
@@ -475,10 +570,11 @@ const GraphBuilder: React.FC = () => {
 					<RadarChart
 						data={currentData}
 						maxValue={maxValue}
-						graphColor={graphColor}
+						graphColor={currentGraphColor}
 						overallRating={overallRating}
 						animationDuration={animationDuration}
 						disableInternalAnimation={isAnimating}
+						showCenterNumber={showCenterNumber}
 					/>
 
 					{/* Stats Grid */}

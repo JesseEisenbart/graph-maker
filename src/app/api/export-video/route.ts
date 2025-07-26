@@ -19,23 +19,27 @@ export async function POST(request: NextRequest) {
 		const {
 			beforeData,
 			afterData,
-			graphColor,
+			beforeGraphColor,
+			afterGraphColor,
 			animationDuration,
 			initialDelay,
 			totalDuration,
 			currentData,
 			overallRating,
 			headerBackgroundColor,
+			showCenterNumber,
 		} = body;
 
 		// Validate input
 		if (
 			!beforeData ||
 			!afterData ||
-			!graphColor ||
+			!beforeGraphColor ||
+			!afterGraphColor ||
 			!animationDuration ||
 			initialDelay === undefined ||
-			!totalDuration
+			!totalDuration ||
+			showCenterNumber === undefined
 		) {
 			return NextResponse.json(
 				{ error: 'Missing required parameters' },
@@ -70,12 +74,14 @@ export async function POST(request: NextRequest) {
 			inputProps: {
 				beforeData,
 				afterData,
-				graphColor,
+				beforeGraphColor,
+				afterGraphColor,
 				overallRating: videoOverallRating,
 				animationDuration,
 				initialDelay,
 				totalDuration,
 				headerBackgroundColor,
+				showCenterNumber,
 			},
 		});
 
@@ -92,12 +98,14 @@ export async function POST(request: NextRequest) {
 			inputProps: {
 				beforeData,
 				afterData,
-				graphColor,
+				beforeGraphColor,
+				afterGraphColor,
 				overallRating: videoOverallRating,
 				animationDuration,
 				initialDelay,
 				totalDuration,
 				headerBackgroundColor,
+				showCenterNumber,
 			},
 		});
 

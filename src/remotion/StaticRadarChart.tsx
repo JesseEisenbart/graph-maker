@@ -22,6 +22,7 @@ interface StaticRadarChartProps {
 	graphColor: string;
 	overallRating: number;
 	headerBackgroundColor?: 'black' | 'white';
+	showCenterNumber?: boolean;
 }
 
 const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
@@ -31,10 +32,11 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 	graphColor,
 	overallRating,
 	headerBackgroundColor = 'white',
+	showCenterNumber = true,
 }) => {
 	// Use displayData for numbers if provided, otherwise fall back to data
 	const numbersData = displayData || data;
-	const size = 416;
+	const size = 410;
 	const center = size / 2;
 	const radius = 140;
 	const levels = 3;
@@ -213,16 +215,18 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 					/>
 
 					{/* Overall Rating in Center */}
-					<text
-						x={center}
-						y={center + 18}
-						textAnchor='middle'
-						fill='white'
-						fontSize='52'
-						fontFamily='Instrument Serif, Georgia, "Times New Roman", serif'
-					>
-						{overallRating}
-					</text>
+					{showCenterNumber && (
+						<text
+							x={center}
+							y={center + 18}
+							textAnchor='middle'
+							fill='white'
+							fontSize='52'
+							fontFamily='Instrument Serif, Georgia, "Times New Roman", serif'
+						>
+							{overallRating}
+						</text>
+					)}
 				</svg>
 
 				{/* Labels */}
@@ -255,7 +259,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 				style={{
 					display: 'grid',
 					gridTemplateColumns: 'repeat(3, 1fr)',
-					rowGap: '12px',
+					rowGap: '8px',
 					columnGap: '32px',
 					maxWidth: '900px',
 					marginBottom: '8px',
