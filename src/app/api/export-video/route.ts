@@ -28,6 +28,11 @@ export async function POST(request: NextRequest) {
 			overallRating,
 			headerBackgroundColor,
 			showCenterNumber,
+			headerText,
+			textPositionX,
+			textPositionY,
+			fontSize,
+			selectedMusic,
 		} = body;
 
 		// Validate input
@@ -82,6 +87,11 @@ export async function POST(request: NextRequest) {
 				totalDuration,
 				headerBackgroundColor,
 				showCenterNumber,
+				headerText,
+				textPositionX,
+				textPositionY,
+				fontSize,
+				selectedMusic,
 			},
 		});
 
@@ -106,6 +116,11 @@ export async function POST(request: NextRequest) {
 				totalDuration,
 				headerBackgroundColor,
 				showCenterNumber,
+				headerText,
+				textPositionX,
+				textPositionY,
+				fontSize,
+				selectedMusic,
 			},
 		});
 

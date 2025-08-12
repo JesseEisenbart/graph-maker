@@ -1,5 +1,11 @@
 import React from 'react';
-import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
+import {
+	interpolate,
+	useCurrentFrame,
+	useVideoConfig,
+	Audio,
+	staticFile,
+} from 'remotion';
 import StaticRadarChart from './StaticRadarChart';
 
 interface GraphData {
@@ -22,6 +28,13 @@ interface RadarChartVideoProps {
 	totalDuration: number;
 	headerBackgroundColor?: 'black' | 'white';
 	showCenterNumber?: boolean;
+	headerText?: string;
+	textPositionX?: number;
+	textPositionY?: number;
+	fontSize?: number;
+	selectedMusic?: string | null;
+	overlayFadeDuration?: number;
+	textPlugAppearTime?: number;
 }
 
 export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
@@ -35,6 +48,13 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 	totalDuration,
 	headerBackgroundColor = 'white',
 	showCenterNumber = true,
+	headerText = '',
+	textPositionX = 50,
+	textPositionY = 50,
+	fontSize = 32,
+	selectedMusic = null,
+	overlayFadeDuration = 2,
+	textPlugAppearTime = 3,
 }) => {
 	const frame = useCurrentFrame();
 	const { fps, width, height } = useVideoConfig();
@@ -142,6 +162,20 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 		contentScale = Math.min(width / 1000, height / 700);
 	}
 
+	// Music file mapping
+	const getMusicFilename = (musicId: string | null) => {
+		switch (musicId) {
+			case 'let-it-happen':
+				return 'let-it-happen-1.mp3';
+			case 'that-one-bro':
+				return 'that-one-bro.mp3';
+			default:
+				return null;
+		}
+	};
+
+	const musicFilename = getMusicFilename(selectedMusic);
+
 	return (
 		<>
 			{/* Force immediate font loading for video rendering */}
@@ -154,6 +188,15 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 				href='https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=block'
 				rel='stylesheet'
 			/>
+			<link
+				rel='preload'
+				href='https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,300..900&display=block'
+				as='style'
+			/>
+			<link
+				href='https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,300..900&display=block'
+				rel='stylesheet'
+			/>
 			<style>
 				{`
 					/* Force font display to prevent invisible text */
@@ -162,6 +205,16 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 					}
 				`}
 			</style>
+
+			{/* Background Music */}
+			{musicFilename && (
+				<Audio
+					src={staticFile(musicFilename)}
+					volume={0.6}
+					startFrom={0}
+					endAt={Math.ceil(totalDuration * fps)}
+				/>
+			)}
 
 			<div
 				style={{
@@ -188,6 +241,12 @@ export const RadarChartVideo: React.FC<RadarChartVideoProps> = ({
 						overallRating={currentRating}
 						headerBackgroundColor={headerBackgroundColor}
 						showCenterNumber={showCenterNumber}
+						headerText={headerText}
+						textPositionX={textPositionX}
+						textPositionY={textPositionY}
+						fontSize={fontSize}
+						overlayFadeDuration={overlayFadeDuration}
+						textPlugAppearTime={textPlugAppearTime}
 					/>
 				</div>
 			</div>

@@ -1,5 +1,12 @@
 import React from 'react';
 import { ATTRIBUTE_COLORS } from '../app/constants/colors';
+import {
+	staticFile,
+	useCurrentFrame,
+	useVideoConfig,
+	interpolate,
+} from 'remotion';
+import SkullEmoji from '../app/components/SkullEmoji';
 
 interface StaticRadarChartProps {
 	data: {
@@ -23,6 +30,12 @@ interface StaticRadarChartProps {
 	overallRating: number;
 	headerBackgroundColor?: 'black' | 'white';
 	showCenterNumber?: boolean;
+	headerText?: string;
+	textPositionX?: number; // percentage from left
+	textPositionY?: number; // percentage from top
+	fontSize?: number; // font size in pixels
+	overlayFadeDuration?: number; // seconds for overlay fade out
+	textPlugAppearTime?: number; // seconds when text plug appears
 }
 
 const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
@@ -33,9 +46,62 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 	overallRating,
 	headerBackgroundColor = 'white',
 	showCenterNumber = true,
+	headerText = '',
+	textPositionX = 50,
+	textPositionY = 50,
+	fontSize = 32,
+	overlayFadeDuration = 2,
+	textPlugAppearTime = 3,
 }) => {
+	const frame = useCurrentFrame();
+	const { fps } = useVideoConfig();
+
+	// Calculate overlay opacity based on fade duration
+	const overlayFadeEndFrame = Math.floor(overlayFadeDuration * fps);
+	const overlayOpacity = interpolate(
+		frame,
+		[0, overlayFadeEndFrame],
+		[1, 0],
+		{
+			extrapolateLeft: 'clamp',
+			extrapolateRight: 'clamp',
+		}
+	);
+
+	// Calculate text plug visibility
+	const textPlugAppearFrame = Math.floor(textPlugAppearTime * fps);
+	const textPlugVisible = frame >= textPlugAppearFrame;
+
 	// Use displayData for numbers if provided, otherwise fall back to data
 	const numbersData = displayData || data;
+
+	// Function to parse text and replace skull emojis with custom component
+	const parseTextWithSkullEmojis = (text: string) => {
+		const skullEmojiRegex = /💀/g;
+		const parts = text.split(skullEmojiRegex);
+		const matches = text.match(skullEmojiRegex);
+
+		if (!matches) {
+			return text;
+		}
+
+		const result: React.ReactNode[] = [];
+		for (let i = 0; i < parts.length; i++) {
+			if (parts[i]) {
+				result.push(parts[i]);
+			}
+			if (i < matches.length) {
+				result.push(
+					<SkullEmoji
+						key={`skull-${i}`}
+						size={fontSize * 0.9}
+						style={{ margin: '0 2px' }}
+					/>
+				);
+			}
+		}
+		return result;
+	};
 	const size = 410;
 	const center = size / 2;
 	const radius = 140;
@@ -121,7 +187,13 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 				alignItems: 'center',
 				fontFamily:
 					'Instrument Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-				backgroundColor: '#0d0d0d',
+				backgroundImage: `url(${staticFile('background.png')})`,
+				backgroundSize: 'cover',
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backdropFilter: 'blur(10px)',
+				backgroundColor: 'rgba(0, 0, 0, 0.5)',
+				position: 'relative',
 			}}
 		>
 			{/* Header */}
@@ -133,8 +205,51 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'center',
+					position: 'relative',
 				}}
-			></div>
+			>
+				{headerText && (
+					<div
+						style={{
+							position: 'absolute',
+							left: `${textPositionX}%`,
+							top: `${textPositionY}%`,
+							transform: 'translate(-50%, -50%)',
+							fontFamily: 'TikTok Sans, sans-serif',
+							fontSize: `${fontSize}px`,
+							fontWeight: '700',
+							color:
+								headerBackgroundColor === 'white'
+									? '#000000'
+									: '#ffffff',
+							textAlign: 'center',
+
+							lineHeight: '1',
+						}}
+					>
+						{headerText.split('\n').map((line, index) => (
+							<div
+								key={index}
+								style={{
+									whiteSpace: 'nowrap',
+									marginBottom:
+										index <
+										headerText.split('\n').length - 1
+											? `${fontSize * 0.01}px`
+											: '0',
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+							>
+								{line
+									? parseTextWithSkullEmojis(line)
+									: '\u00A0'}
+							</div>
+						))}
+					</div>
+				)}
+			</div>
 
 			{/* Chart */}
 			<div style={{ position: 'relative', marginTop: '-12px' }}>
@@ -221,8 +336,9 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 							y={center + 18}
 							textAnchor='middle'
 							fill='white'
-							fontSize='52'
+							fontSize='48'
 							fontFamily='Instrument Sans, sans-serif'
+							fontWeight='700'
 						>
 							{overallRating}
 						</text>
@@ -243,8 +359,9 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 								textAlign: 'center',
 								color: attr.color,
 								textShadow: `0 0 12px ${attr.color}`,
-								fontSize: '18px',
+								fontSize: '13px',
 								fontFamily: 'Instrument Sans, sans-serif',
+								fontWeight: '700',
 							}}
 						>
 							{attr.label}
@@ -253,12 +370,31 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 				})}
 			</div>
 
+			{/* Text Plug - "app is called empire habits" */}
+			{textPlugVisible && (
+				<div
+					style={{
+						position: 'absolute',
+						top: '505px',
+						left: '50%',
+						width: '100%',
+						textAlign: 'center',
+						transform: 'translateX(-50%)',
+						fontFamily: 'TikTok Sans, sans-serif',
+						color: '#ffffff',
+						fontSize: '19px',
+					}}
+				>
+					app is called empire habits
+				</div>
+			)}
+
 			{/* Stats Grid */}
 			<div
 				style={{
 					display: 'grid',
 					gridTemplateColumns: 'repeat(3, 1fr)',
-					rowGap: '8px',
+					rowGap: '4px',
 					columnGap: '32px',
 					maxWidth: '900px',
 					marginBottom: '8px',
@@ -268,11 +404,13 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 					<div key={attr.key} style={{ textAlign: 'left' }}>
 						<div
 							style={{
-								fontSize: '20px',
+								fontSize: '14px',
 								letterSpacing: '-0.025em',
 								fontFamily: 'Instrument Sans, sans-serif',
 								color: attr.color,
 								marginBottom: '-4px',
+								fontWeight: '600',
+								textShadow: `0 0 12px ${attr.color}`,
 							}}
 						>
 							{attr.label}
@@ -282,6 +420,7 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 								fontSize: '36px',
 								color: 'white',
 								fontFamily: 'Instrument Sans, sans-serif',
+								fontWeight: '700',
 							}}
 						>
 							{attr.value}
@@ -289,6 +428,22 @@ const StaticRadarChart: React.FC<StaticRadarChartProps> = ({
 					</div>
 				))}
 			</div>
+
+			{/* Black overlay that fades out */}
+			{overlayOpacity > 0 && (
+				<div
+					style={{
+						position: 'absolute',
+						top: '145px', // Start below the header
+						left: '0',
+						right: '0',
+						bottom: '0',
+						backgroundColor: 'black',
+						opacity: overlayOpacity,
+						pointerEvents: 'none',
+					}}
+				/>
+			)}
 		</div>
 	);
 };

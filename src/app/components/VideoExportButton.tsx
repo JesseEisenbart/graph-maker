@@ -23,6 +23,13 @@ interface VideoExportButtonProps {
 	overallRating: number;
 	headerBackgroundColor: 'black' | 'white';
 	showCenterNumber: boolean;
+	headerText: string;
+	textPositionX: number;
+	textPositionY: number;
+	fontSize: number;
+	selectedMusic: string | null;
+	overlayFadeDuration: number;
+	textPlugAppearTime: number;
 }
 
 const VideoExportButton: React.FC<VideoExportButtonProps> = ({
@@ -37,6 +44,13 @@ const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 	overallRating,
 	headerBackgroundColor,
 	showCenterNumber,
+	headerText,
+	textPositionX,
+	textPositionY,
+	fontSize,
+	selectedMusic,
+	overlayFadeDuration,
+	textPlugAppearTime,
 }) => {
 	const [isExporting, setIsExporting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -63,6 +77,13 @@ const VideoExportButton: React.FC<VideoExportButtonProps> = ({
 					overallRating,
 					headerBackgroundColor,
 					showCenterNumber,
+					headerText,
+					textPositionX,
+					textPositionY,
+					fontSize,
+					selectedMusic,
+					overlayFadeDuration,
+					textPlugAppearTime,
 				}),
 			});
 
